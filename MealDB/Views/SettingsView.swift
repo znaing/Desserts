@@ -7,20 +7,25 @@
 
 import SwiftUI
 
+// small note, consistent spacing between a keyword and the curly brace
+
 struct SettingsView: View {
+    
     @AppStorage ("darkMode") private var darkMode = false
     @State private var showSheet = false
+    
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             ZStack {
                 AnimatedBackground()
-                VStack{
-                    Form{
+                
+                VStack {
+                    Form {
                         //Toggles between dark and light mode
                         Toggle("Dark Mode", isOn: $darkMode)
                         
                         //Presents a sheet that lets the user change the app icon
-                        Button("Change App Icon"){
+                        Button("Change App Icon") {
                             showSheet = true
                             let impactMed = UIImpactFeedbackGenerator(style: .rigid)
                             impactMed.impactOccurred()
@@ -42,10 +47,10 @@ struct SettingsView: View {
     }
 }
 
-//Web view that routes to my personal page
+/// Web view that routes to my personal page
 struct WebViewButton: View {
     var body: some View {
-        HStack{
+        HStack {
             Text("made by")
             Button(action: {
                 // Define the URL string.
@@ -58,6 +63,7 @@ struct WebViewButton: View {
                     .foregroundColor(.primary)
                     .cornerRadius(0)
                     .underline()
+                // cornerRadius  doesn't do anything cause it's zero?
             }
         }.padding(.bottom)
     }

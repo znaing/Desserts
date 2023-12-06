@@ -9,7 +9,7 @@ import SwiftUI
 
 @main
 struct MealDBApp: App {
-    @AppStorage ("darkMode") private var darkMode = false
+    @AppStorage ("darkMode") private var darkMode = false // a better name for this is `isDarkMode`
     var body: some Scene {
         WindowGroup {
             ContentView()

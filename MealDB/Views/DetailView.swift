@@ -76,7 +76,7 @@ struct DetailView: View {
                                     }
                                     .padding(.horizontal,50)
                                 }
-                                .foregroundStyle(Color.themeOfText)
+                                .foregroundStyle(Color.themeOfText) // you could use `.primary` or not set it at all, because the color of the text will automatically change
                             }
                         }
                     }
@@ -88,6 +88,8 @@ struct DetailView: View {
             await fetchMealDetails()
         }
     }
+    
+    // This could be moved into a "viewModel" and / or outside of the view, so that it can be unit tested
     
     //FetchDetails function takes id number from selected meal and performs an API call to get details of the selected meal
     //Decoded data gets stored in mealDetails that has more attributes such as instructions, ingredients and measurements

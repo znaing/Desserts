@@ -30,6 +30,7 @@ struct ContentView: View {
             ZStack {
                 AnimatedBackground()
                 VStack{
+                    // conform `MealCategoryModel` to `Identifiable`, and you could get rid of `id: \.idMeal`
                     List(sortedMeals, id: \.idMeal){ meal in
                         NavigationLink{
                             DetailView(selectedMeal: meal)
@@ -100,6 +101,8 @@ struct ContentView: View {
         
     }
     
+    // This can be moved into a "view model" as opposed to staying in the view
+    
     //fetchDeserts performs a networking call to populate the list of Deserts
     //It includes name, id and image link, all as strings
     func fetchDeserts() async {
@@ -108,6 +111,7 @@ struct ContentView: View {
         }
         
         do{
+            // you should keep the second parameter URLResponse and check whether the response is valid
             let (data,_) = try await URLSession.shared.data(from: url)
             if let decodedResponse = try? JSONDecoder().decode(MealsCategoryResponse.self, from: data)
             {
