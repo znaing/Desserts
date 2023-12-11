@@ -9,11 +9,11 @@ import SwiftUI
 
 @main
 struct MealDBApp: App {
-    @AppStorage ("darkMode") private var darkMode = false
+    @AppStorage ("isDarkMode") private var isDarkMode = false
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .preferredColorScheme(darkMode ? .dark : .light)
+                .preferredColorScheme(isDarkMode ? .dark : .light)
         }
     }
 }

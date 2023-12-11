@@ -1,31 +1,27 @@
-//
 //  SettingsView.swift
 //  MealDB
-//
 //  Created by Zaid Naing on 11/17/23.
-//
 
 import SwiftUI
 
 struct SettingsView: View {
-    @AppStorage ("darkMode") private var darkMode = false
+    @AppStorage ("isDarkMode") private var isDarkMode = false
     @State private var showSheet = false
     var body: some View {
-        NavigationStack{
+        NavigationStack {
             ZStack {
                 AnimatedBackground()
-                VStack{
-                    Form{
+                VStack {
+                    Form {
                         //Toggles between dark and light mode
-                        Toggle("Dark Mode", isOn: $darkMode)
-                        
+                        Toggle("Dark Mode", isOn: $isDarkMode)
                         //Presents a sheet that lets the user change the app icon
-                        Button("Change App Icon"){
+                        Button("Change App Icon") {
                             showSheet = true
                             let impactMed = UIImpactFeedbackGenerator(style: .rigid)
                             impactMed.impactOccurred()
                         }
-                        .sheet(isPresented: $showSheet){
+                        .sheet(isPresented: $showSheet) {
                             AppIconView()
                                 .presentationDetents([.height(300)])
                                 .presentationDragIndicator(.automatic)
@@ -42,7 +38,7 @@ struct SettingsView: View {
     }
 }
 
-//Web view that routes to my personal page
+///Web view that routes to my personal page
 struct WebViewButton: View {
     var body: some View {
         HStack{
@@ -56,7 +52,6 @@ struct WebViewButton: View {
             }) {
                 Text("@zaid")
                     .foregroundColor(.primary)
-                    .cornerRadius(0)
                     .underline()
             }
         }.padding(.bottom)

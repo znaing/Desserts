@@ -1,27 +1,17 @@
-//  MealDBModel.swift
+//
+//  MealDetailsModel.swift
 //  MealDB
-//  Created by Zaid Naing on 11/17/23.
+//
+//  Created by Zaid Naing on 12/11/23.
+//
 
 import Foundation
-
-//For dessert category
-struct MealsCategoryResponse: Codable{
-    let meals : [MealCategoryModel]
-}
-
-struct MealCategoryModel: Codable{
-    let strMeal: String
-    let idMeal: String
-    let strMealThumb: String
-
-}
-
 //For meal details
-struct MealsDetailsResponse: Codable{
+struct MealsDetailsResponse: Codable {
     let meals : [MealDetailsModel]
 }
 
-struct MealDetailsModel: Codable{
+struct MealDetailsModel: Codable {
     let strMeal: String
     let idMeal: String
     let strMealThumb: String
@@ -92,11 +82,4 @@ struct MealDetailsModel: Codable{
                 return nil
             }
     }
-}
-
-//This struct is Alternate app icons
-struct AlternativeAppIcons: Identifiable{
-    var id = UUID()
-    var appIconName : String
-    var scrollIconName : String
 }

@@ -3,112 +3,117 @@
 //  Created by Zaid Naing on 11/17/23.
 
 import SwiftUI
-
+///selected meal details from the list from ContentView()
 struct DetailView: View {
-    //selected meal from the list from ContentView()
+    @StateObject private var viewModel = DetailViewModel()
     let selectedMeal : MealCategoryModel
-    @State private var mealDetails : MealDetailsModel?
-    
     var body: some View {
         NavigationStack{
             ZStack{
                 AnimatedBackground()
-                ScrollView{
-                    VStack{
-                        if let mealDetails = mealDetails{
-                            Text(mealDetails.strMeal)
-                                .font(.title)
-                                .bold()
-                                .padding()
-                            
-                            //Retrieving Dessert image with Async image with error handling and loading icon
-                            AsyncImage(url: URL(string: mealDetails.strMealThumb )){ phase in
-                                if let image = phase.image {
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                }else if phase.error != nil{
-                                    Text("There was an error loading the image")
-                                }else{
-                                    ProgressView()
-                                }
-                            }
-                            .frame(width:300, height:300)
-                            .border(Color.black, width: 1)
-                            .clipShape(.rect(cornerRadius: 10))
-                            
-                            ZStack{
-                                Color.theme
-                                    .clipShape(.rect(cornerRadius: 10))
+                ScrollView {
+                    VStack {
+                        if let mealDetails = viewModel.mealDetails{
+                            MealTitleView(title: mealDetails.strMeal)
+                            MealImageView(imageString: mealDetails.strMealThumb)
+                            ZStack {
+                                Color.theme.clipShape(.rect(cornerRadius: 10))
                                 VStack{
-                                    HStack{
-                                        Text("Instructions")
-                                            .font(.title2).bold()
-                                            .multilineTextAlignment(.leading)
-                                            .padding()
-                                        Spacer()
-                                    }
-                                    
-                                    Text(mealDetails.strInstructions)
-                                        .font(.body)
-                                        .padding(.horizontal)
-                                    
-                                    Text("Ingredients and Measurement")
-                                        .font(.title2).bold()
-                                        .padding()
-                                    
-                                    VStack(alignment: .leading){
-                                        ForEach(mealDetails.ingredients.indices, id: \.self) { index in
-                                            HStack(){
-                                                if let ingredient = mealDetails.ingredients[index]{
-                                                    if mealDetails.ingredients[index] != "" {
-                                                        Text(ingredient)
-                                                    }
-                                                }
-                                                Spacer()
-                                                if let measure = mealDetails.measurements[index]{
-                                                    if mealDetails.measurements[index] != "" {
-                                                        Text(measure)
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    .padding(.horizontal,50)
+                                    InstructionsView(instructions: mealDetails.strInstructions)
+                                    IngredientsView(ingredients: mealDetails.ingredients, measurements: mealDetails.measurements)
                                 }
-                                .foregroundStyle(Color.themeOfText)
                             }
+                            .foregroundStyle(Color.themeOfText)
+                            .padding()
                         }
                     }
-                    .padding()
                 }
             }
         }
         .task {
-            await fetchMealDetails()
+            await viewModel.fetchMealDetails(selectedMeal: selectedMeal)
         }
     }
-    
-    //FetchDetails function takes id number from selected meal and performs an API call to get details of the selected meal
-    //Decoded data gets stored in mealDetails that has more attributes such as instructions, ingredients and measurements
-    func fetchMealDetails() async {
-        guard let url = URL(string: "https://themealdb.com/api/json/v1/1/lookup.php?i=\(selectedMeal.idMeal)")else{
-            return
+}
+
+///Meal Title
+struct MealTitleView: View {
+    let title : String
+    var body: some View {
+        Text(title)
+            .font(.title)
+            .bold()
+            .padding()
+    }
+}
+
+///Meal Image
+struct MealImageView: View {
+    let imageString : String
+    var body: some View {
+        //Retrieving Dessert image with Async image with error handling and loading icon
+        AsyncImage(url: URL(string: imageString )){ phase in
+            if let image = phase.image {
+                image
+                    .resizable()
+                    .scaledToFit()
+            }else if phase.error != nil {
+                Text("There was an error loading the image")
+            }else {
+                ProgressView()
+            }
+        }
+        .frame(width:300, height:300)
+        .border(Color.black, width: 1)
+        .clipShape(.rect(cornerRadius: 10))
+    }
+}
+
+///Instructions for meal
+struct InstructionsView: View {
+    let instructions : String
+    var body: some View {
+        VStack {
+            HStack {
+                Text("Instructions")
+                    .font(.title2).bold()
+                    .multilineTextAlignment(.leading)
+                    .padding()
+                Spacer()
+            }
+            
+            Text(instructions)
+                .font(.body)
+                .padding(.horizontal)
         }
         
-        do{
-            let (data,_) = try await URLSession.shared.data(from: url)
-            if let decodedResponse = try? JSONDecoder().decode(MealsDetailsResponse.self, from: data)
-            {
-                if let meal = decodedResponse.meals.first{
-                    mealDetails = meal
-                }else{
-                    print("Error")
+    }
+}
+
+///List of ingredients and measurements
+struct IngredientsView: View {
+    let ingredients: [String?]
+    let measurements: [String?]
+    
+    var body: some View {
+        Text("Ingredients and Measurement")
+            .font(.title2).bold()
+            .padding()
+        
+        VStack(alignment: .leading) {
+            ForEach(ingredients.indices, id: \.self) { index in
+                HStack(){
+                    if let ingredient = ingredients[index], ingredient != ""{
+                        Text(ingredient)
+                    }
+                    Spacer()
+                    if let measure = measurements[index], measure != ""{
+                        Text(measure)
+                    }
                 }
             }
-        }catch {
-            print("Invalid data")
         }
+        .padding(.horizontal,50)
+        
     }
-    
 }

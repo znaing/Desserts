@@ -1,12 +1,9 @@
-//
 //  AppIconView.swift
 //  MealDB
-//
 //  Created by Zaid Naing on 11/21/23.
-//
 
 import SwiftUI
-
+///App icon Gallery
 struct AppIconView: View {
     let appIcons: [AlternativeAppIcons] = [
         AlternativeAppIcons(appIconName: "AppIcon1", scrollIconName: "icon1"),
@@ -26,7 +23,7 @@ struct AppIconView: View {
                     .bold()
                 ScrollView(.horizontal, showsIndicators: false){
                     HStack(spacing: 20){
-                        ForEach(appIcons){ icon in
+                        ForEach(appIcons) { icon in
                             VStack{
                                 Button{
                                     UIApplication.shared.setAlternateIconName(icon.appIconName)
